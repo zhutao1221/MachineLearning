@@ -45,6 +45,7 @@
     <script>
       var chatterbotUrl = '{% url "chatterbot:chatterbot" %}';
       var csrftoken = Cookies.get('csrftoken');
+      console.log(chatterbotUrl)
 
       function csrfSafeMethod(method) {
         // these HTTP methods do not require CSRF protection

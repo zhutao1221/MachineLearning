@@ -25,7 +25,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'chatterbot.ext.django_chatterbot',
     'example_app',
 )
@@ -36,8 +35,10 @@ CHATTERBOT = {
     'name': 'Django ChatterBot Example',
     'trainer': 'chatterbot.trainers.ChatterBotCorpusTrainer',
     'training_data': [
-        'chatterbot.corpus.english.greetings'
+        'chatterbot.corpus.english'
     ],
+    'storage_adapter': 'chatterbot.storage.MongoDatabaseAdapter',
+    'database': 'trainSample',            
     'django_app_name': 'django_chatterbot'
 }
 
@@ -77,8 +78,12 @@ WSGI_APPLICATION = 'example_app.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'chatterbot',
+            'USER': 'root',
+            'PASSWORD': 'root',
+            'HOST': 'localhost',
+            'PORT': '3306',
     }
 }
 

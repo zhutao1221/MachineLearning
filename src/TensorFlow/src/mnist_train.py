@@ -63,11 +63,13 @@ def train(mnist):
                                           mnist_inference.NUM_CHANNELS))
             _, loss_value, step = sess.run([train_op, loss, global_step],feed_dict={x: reshaped_xs, y_:ys})
             
+            writer = tf.summary.FileWriter("/tmp/tflog", tf.get_default_graph())
+    
             #if i % 1000 == 0:
             print('After %d training step(s), loss on training batch is %g.' % (step, loss_value))
                 #saver.save(sess, save_path, global_step, latest_filename, meta_graph_suffix, write_meta_graph, write_state)
         
-        
+    writer.close()    
     print(os.path)    
     print(os.path.join(MODEL_SAVE_PATH, MODEL_NAME))    
         
@@ -76,6 +78,7 @@ def train(mnist):
 def main(argv=None):
     mnist = input_data.read_data_sets('data', one_hot=True)
     train(mnist)
+
     
 if __name__ == '__main__':
     tf.app.run()

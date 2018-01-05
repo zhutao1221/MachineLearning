@@ -17,40 +17,47 @@ MODEL_NAME = 'model.ckpt'
 
 def train(mnist):
     sess = tf.Session()
-    x = tf.placeholder(tf.float32,
-                       [BATCH_SIZE,
-                       mnist_inference.IMAGE_SIZE,
-                       mnist_inference.IMAGE_SIZE,
-                       mnist_inference.NUM_CHANNELS], 
-                       name='x-input')
     
-    y_ = tf.placeholder(tf.float32, [None, mnist_inference.OUTPUT_NODE], name='y-input')
+    with tf.name_scope('input'):
+        x = tf.placeholder(tf.float32,
+                           [BATCH_SIZE,
+                            mnist_inference.IMAGE_SIZE,
+                            mnist_inference.IMAGE_SIZE,
+                            mnist_inference.NUM_CHANNELS], 
+                           name='x-input')
+    
+        y_ = tf.placeholder(tf.float32, [None, mnist_inference.OUTPUT_NODE], name='y-input')
 
     regularizer = tf.contrib.layers.l2_regularizer(REGULARAZTION_RATE)
     
+    #with tf.name_scope('output'):    
     y = mnist_inference.inference(x, 1, regularizer)
+        
     global_step = tf.Variable(0, trainable=False)
     
-    variable_averages = tf.train.ExponentialMovingAverage(
-        MOVING_AVERAGE_DECAY, global_step)
+    with tf.name_scope('moving_average'):
+        variable_averages = tf.train.ExponentialMovingAverage(
+            MOVING_AVERAGE_DECAY, global_step)
 
     
-    variable_averages_op = variable_averages.apply(tf.trainable_variables())
+        variable_averages_op = variable_averages.apply(tf.trainable_variables())
 
-  
-    cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(labels = tf.argmax(y_, 1), logits = y)
+    with tf.name_scope('loss_function'):
     
-    cross_entropy_mean = tf.reduce_mean(cross_entropy)
-    loss = cross_entropy_mean + tf.add_n(tf.get_collection('losses'))
+        cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(labels = tf.argmax(y_, 1), logits = y)
+    
+        cross_entropy_mean = tf.reduce_mean(cross_entropy)
+        loss = cross_entropy_mean + tf.add_n(tf.get_collection('losses'))
 
-    learning_rate = tf.train.exponential_decay(
-        LEARNING_RATE_BASE, 
-        global_step, 
-        mnist.train.num_examples / BATCH_SIZE, 
-        LEARNING_RATE_DECAY)
-    train_step = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss, global_step=global_step)
-    with tf.control_dependencies([train_step, variable_averages_op]):
-        train_op = tf.no_op(name='train')
+    with tf.name_scope('train_step'): 
+        learning_rate = tf.train.exponential_decay(
+            LEARNING_RATE_BASE, 
+            global_step, 
+            mnist.train.num_examples / BATCH_SIZE, 
+            LEARNING_RATE_DECAY)
+        train_step = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss, global_step=global_step)
+        with tf.control_dependencies([train_step, variable_averages_op]):
+            train_op = tf.no_op(name='train')
         
     #saver = tf.train.Saver()
     with tf.Session() as sess:
@@ -63,7 +70,11 @@ def train(mnist):
                                           mnist_inference.NUM_CHANNELS))
             _, loss_value, step = sess.run([train_op, loss, global_step],feed_dict={x: reshaped_xs, y_:ys})
             
+            
             writer = tf.summary.FileWriter("/tmp/tflog", tf.get_default_graph())
+            
+            print(y)    
+            #print(sess.run(y)) 
     
             #if i % 1000 == 0:
             print('After %d training step(s), loss on training batch is %g.' % (step, loss_value))

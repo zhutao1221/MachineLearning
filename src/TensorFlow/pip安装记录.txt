@@ -1,0 +1,45 @@
+zhutao@zhutao-PC:~/dev/gitCode/tensorflow$ pip install tensorflow
+Collecting tensorflow
+  Downloading tensorflow-1.4.1-cp36-cp36m-manylinux1_x86_64.whl (41.2MB)
+    100% |████████████████████████████████| 41.2MB 31kB/s 
+Requirement already satisfied: numpy>=1.12.1 in /home/zhutao/anaconda3/lib/python3.6/site-packages (from tensorflow)
+Collecting tensorflow-tensorboard<0.5.0,>=0.4.0rc1 (from tensorflow)
+  Downloading tensorflow_tensorboard-0.4.0-py3-none-any.whl (1.7MB)
+    100% |████████████████████████████████| 1.7MB 171kB/s 
+Collecting enum34>=1.1.6 (from tensorflow)
+  Downloading enum34-1.1.6-py3-none-any.whl
+Requirement already satisfied: wheel>=0.26 in /home/zhutao/anaconda3/lib/python3.6/site-packages (from tensorflow)
+Collecting protobuf>=3.3.0 (from tensorflow)
+  Downloading protobuf-3.5.1-cp36-cp36m-manylinux1_x86_64.whl (6.4MB)
+    100% |████████████████████████████████| 6.4MB 116kB/s 
+Requirement already satisfied: six>=1.10.0 in /home/zhutao/anaconda3/lib/python3.6/site-packages (from tensorflow)
+Requirement already satisfied: werkzeug>=0.11.10 in /home/zhutao/anaconda3/lib/python3.6/site-packages (from tensorflow-tensorboard<0.5.0,>=0.4.0rc1->tensorflow)
+Collecting bleach==1.5.0 (from tensorflow-tensorboard<0.5.0,>=0.4.0rc1->tensorflow)
+  Downloading bleach-1.5.0-py2.py3-none-any.whl
+Collecting markdown>=2.6.8 (from tensorflow-tensorboard<0.5.0,>=0.4.0rc1->tensorflow)
+  Downloading Markdown-2.6.11-py2.py3-none-any.whl (78kB)
+    100% |████████████████████████████████| 81kB 259kB/s 
+Collecting html5lib==0.9999999 (from tensorflow-tensorboard<0.5.0,>=0.4.0rc1->tensorflow)
+  Downloading html5lib-0.9999999.tar.gz (889kB)
+    100% |████████████████████████████████| 890kB 128kB/s 
+Requirement already satisfied: setuptools in /home/zhutao/anaconda3/lib/python3.6/site-packages (from protobuf>=3.3.0->tensorflow)
+Building wheels for collected packages: html5lib
+  Running setup.py bdist_wheel for html5lib ... done
+  Stored in directory: /home/zhutao/.cache/pip/wheels/6f/85/6c/56b8e1292c6214c4eb73b9dda50f53e8e977bf65989373c962
+Successfully built html5lib
+Installing collected packages: protobuf, html5lib, bleach, markdown, tensorflow-tensorboard, enum34, tensorflow
+  Found existing installation: html5lib 0.999999999
+    Uninstalling html5lib-0.999999999:
+      Successfully uninstalled html5lib-0.999999999
+  Found existing installation: bleach 2.0.0
+    Uninstalling bleach-2.0.0:
+      Successfully uninstalled bleach-2.0.0
+Successfully installed bleach-1.5.0 enum34-1.1.6 html5lib-0.9999999 markdown-2.6.11 protobuf-3.5.1 tensorflow-1.4.1 tensorflow-tensorboard-0.4.0
+
+Collecting absl-py>=0.1.6 (from tensorflow==1.5.0)
+  Downloading absl-py-0.1.9.tar.gz (79kB)
+    100% |████████████████████████████████| 81kB 520kB/s 
+Collecting tensorflow-tensorboard<1.6.0,>=1.5.0 (from tensorflow==1.5.0)
+  Downloading tensorflow_tensorboard-1.5.0-py3-none-any.whl (3.0MB)
+    100% |████████████████████████████████| 3.0MB 168kB/s 
+

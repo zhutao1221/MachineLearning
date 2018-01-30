@@ -1,22 +1,26 @@
 import tensorflow as tf
 
-INPUT_NODE = 784
-OUTPUT_NODE = 10
+INPUT_NODE = 1200
+OUTPUT_NODE = 2
+NUM_CHANNELS = 1
 
-IMAGE_SIZE = 28
-NUM_LABELS = 10
+Row_SIZE = 6
+Col_SIZE = 4
+NUM_LABELS = 2
 
 CONV1_DEEP = 32
-CONV1_SIZE = 5
+CONV1_Row_SIZE = 3
+CONV1_Col_SIZE = 1
 
 CONV2_DEEP = 64
-CONV2_SIZE = 5
+CONV2_Row_SIZE = 3
+CONV2_Col_SIZE = 1
 
 FC_SIZE = 512
 
 def inference(input_tensor, train, regularizer):
     with tf.variable_scope('layer1-conv1'):
-        conv1_weights = tf.get_variable('weight', [CONV1_SIZE, CONV1_SIZE, CONV1_DEEP], 
+        conv1_weights = tf.get_variable('weight', [CONV1_Row_SIZE, CONV1_Col_SIZE, NUM_CHANNELS, CONV1_DEEP], 
                                         initializer=tf.truncated_normal_initializer(stddev = 0.1))
         conv1_biases = tf.get_variable(
             'bias', [CONV1_DEEP], initializer=tf.constant_initializer(0.0))
@@ -29,13 +33,13 @@ def inference(input_tensor, train, regularizer):
         
     with tf.name_scope('layer2-pool1'):
         pool1 = tf.nn.max_pool(
-            relu1, ksize = [1,2,2,1], strides=[1,2,2,1], padding='SAME')
+            relu1, ksize = [1,3,1,1], strides=[1,3,1,1], padding='SAME')
         
         #print('pool1:')
         #print(pool1)        
         
     with tf.variable_scope('layer3-conv2'):
-        conv2_weights = tf.get_variable('weight', [CONV2_SIZE, CONV2_SIZE, CONV1_DEEP, CONV2_DEEP], 
+        conv2_weights = tf.get_variable('weight', [CONV2_Row_SIZE, CONV2_Col_SIZE, CONV1_DEEP, CONV2_DEEP], 
                                         initializer=tf.truncated_normal_initializer(stddev = 0.1))
         conv2_biases = tf.get_variable(
             'bias', [CONV2_DEEP], initializer=tf.constant_initializer(0.0))
@@ -49,7 +53,7 @@ def inference(input_tensor, train, regularizer):
         
     with tf.name_scope('layer4-pool2'):
         pool2 = tf.nn.max_pool(
-            relu2, ksize = [1,2,2,1], strides=[1,2,2,1], padding='SAME')
+            relu2, ksize = [1,3,1,1], strides=[1,3,1,1], padding='SAME')
     
     pool_shape = pool2.get_shape().as_list()
     

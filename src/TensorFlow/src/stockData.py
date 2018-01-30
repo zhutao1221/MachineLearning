@@ -12,36 +12,52 @@ def createDate():
     i = 0
     for rowTemp in readTemp:
         if i == 0:
-            changeRate = 0.0      
+            tempVarLast = float(rowTemp['开盘'])
+            tempVarNow = float(rowTemp['收盘'])
+            changeRate = 100 * (tempVarNow - tempVarLast)/tempVarLast
+                   
+            if tempVarNow < tempVarLast:
+                label = 0
+            else:
+                label = 1
+                                 
         else: 
             tempVarNow = float(rowTemp['收盘'])    
-            changeRate = (tempVarNow - tempVarLast)/tempVarLast
-            changeRate = changeRate * 100 
-        
+            changeRate = 100 * (tempVarNow - tempVarLast)/tempVarLast
+            
+            if tempVarNow < tempVarLast:
+                label = 0
+            else:
+                label = 1 
+         
         if  changeRate <= -10.0:
-            label = 1
+            changeLabel = 0
         elif  changeRate > -10.0 and changeRate <= -5.0:
-            label = 2
+            changeLabel = 1
         elif  changeRate > -5.0 and changeRate <= -2.0:
-            label = 3
+            changeLabel = 2
         elif  changeRate > -2.0 and changeRate <= -1.0:
-            label = 4
+            changeLabel = 3
         elif  changeRate > -1.0 and changeRate <= -0.5:
-            label = 5
-        elif  changeRate > -0.5 and changeRate <= 0.5:
-            label = 6
+            changeLabel = 4
+        elif  changeRate > -0.5 and changeRate < 0.0:
+            changeLabel = 5
+        elif  changeRate >= 0.0 and changeRate <= 0.5:
+            changeLabel = 6            
         elif  changeRate > 0.5 and changeRate <= 1:
-            label = 7
+            changeLabel = 7
         elif  changeRate > 1.0 and changeRate <= 2.0:
-            label = 8
+            changeLabel = 8
         elif  changeRate > 2.0 and changeRate <= 5.0:
-            label = 9
+            changeLabel = 9
         elif  changeRate > 5.0 and changeRate <= 10.0:
-            label = 10
+            changeLabel = 10
         elif  changeRate > 10.0:
-            label = 11
+            changeLabel = 11
         else:
-            label = 0                                                                
+            changeLabel = 12
+            
+        shakerRate = 100 * (float(rowTemp['最高']) - float(rowTemp['最低'])) / float(rowTemp['收盘'])                                                                   
         
         list = list.append(pandas.DataFrame({'时间':rowTemp['时间'],
                                              '开盘':rowTemp['开盘'],
@@ -49,9 +65,10 @@ def createDate():
                                              '最低':rowTemp['最低'],
                                              '收盘':rowTemp['收盘'],
                                              '成交量':rowTemp['成交量'],
-                                             '涨跌幅':changeRate,
-                                             '标签':label},index=[i]))
-        tempVarLast =  float(rowTemp['收盘'])    
+                                             '涨跌幅':changeLabel,
+                                             '震荡幅':shakerRate,
+                                             '涨跌':label},index=[i]))
+        tempVarLast =  float(rowTemp['收盘'])
         i = i + 1
     list.to_csv('data/stock.csv',encoding='utf-8')
     
@@ -60,30 +77,41 @@ def oneBatchData(days,index):
     readTemp = csv.DictReader(csvTemp)
     
     x = []
-    y = []
-    
+        
     i = 0
     for rowTemp in readTemp:
         if i >= index and i < index + days:
-            x.append(float(rowTemp['开盘']))
-            x.append(float(rowTemp['收盘']))
-            x.append(float(rowTemp['最高']))
-            x.append(float(rowTemp['最低']))
+            x.append(float(rowTemp['涨跌']))            
             x.append(float(rowTemp['成交量']))
-            y.append(int(rowTemp['标签']))
+            x.append(float(rowTemp['涨跌幅']))             
+            x.append(float(rowTemp['震荡幅']))
+        if i == index + days:
+            if int(rowTemp['涨跌']) == 1:
+                y = [0,1]
+            else:
+                y = [1,0]      
         i = i + 1    
     return x,y
 
 def allBatchData(batch,days,index):
-    for i in range(batch):
-        xTemp,yTemp_ = oneBatchData(days,index)
+    x = []
+    y = []    
+    for i in range(batch):       
+        xTemp,yTemp = oneBatchData(days,index)
+        x.append(xTemp)
+        y.append(yTemp)
         i = i + 1
         index = index + i
+    return x,y    
+        
            
 
 if __name__ == '__main__':
     #createDate() 
-#     x_,y_ = nextBatch(6,0,0)
-#     reshaped_xs = numpy.reshape(x_, (6,5))
-#     print(reshaped_xs) 
+#     x_,y_ = oneBatchData(6,0)
+#     reshaped_xs = numpy.reshape(x_, (6,4))
+#     print(reshaped_xs)
+    x_,y_ = allBatchData(2,12,0)
+    reshaped_xs = numpy.reshape(x_, (2,12,4))
+    print(y_)  
     

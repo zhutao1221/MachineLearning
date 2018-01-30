@@ -1,29 +1,30 @@
 import os
 import tensorflow as tf
-from tensorflow.examples.tutorials.mnist import input_data
-from . import stockInference
+import stockData
+import stockInference
 from tensorflow.contrib.nn.python.ops import cross_entropy
 import numpy as np
 
-BATCH_SIZE = 100
+BATCH_SIZE = 60
 LEARNING_RATE_BASE = 0.8
 LEARNING_RATE_DECAY = 0.99
 REGULARAZTION_RATE = 0.0001
-TRAINING_STEPS = 30000
+TRAINING_STEPS = 90
 MOVING_AVERAGE_DECAY = 0.99
 
 MODEL_SAVE_PATH = 'model'
 MODEL_NAME = 'model.ckpt'
 
-def train(mnist):
+def train():
     sess = tf.Session()
     
     with tf.name_scope('input'):
         x = tf.placeholder(tf.float32,
                            [BATCH_SIZE,
-                            stockInference.IMAGE_SIZE,
-                            stockInference.IMAGE_SIZE], 
-                           name='x-input')
+                            stockInference.Row_SIZE,
+                            stockInference.Col_SIZE,
+                            stockInference.NUM_CHANNELS], 
+                            name='x-input')
     
         y_ = tf.placeholder(tf.float32, [None, stockInference.OUTPUT_NODE], name='y-input')
 
@@ -50,7 +51,7 @@ def train(mnist):
         learning_rate = tf.train.exponential_decay(
             LEARNING_RATE_BASE, 
             global_step, 
-            mnist.train.num_examples / BATCH_SIZE, 
+            5580 / BATCH_SIZE, 
             LEARNING_RATE_DECAY)
         train_step = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss, global_step=global_step)
         with tf.control_dependencies([train_step, variable_averages_op]):
@@ -60,23 +61,22 @@ def train(mnist):
     with tf.Session() as sess:
         tf.global_variables_initializer().run()
         for i in range(TRAINING_STEPS):
-            xs, ys = mnist.train.next_batch(BATCH_SIZE)
+            xs, ys  = stockData.allBatchData(BATCH_SIZE,6,i)
+            #print(ys)           
+            #xs, ys = mnist.train.next_batch(BATCH_SIZE)
             reshaped_xs = np.reshape(xs, (BATCH_SIZE,
-                                          stockInference.IMAGE_SIZE,
-                                          stockInference.IMAGE_SIZE))
+                                          stockInference.Row_SIZE,
+                                          stockInference.Col_SIZE,
+                                          stockInference.NUM_CHANNELS))
             _, loss_value, step = sess.run([train_op, loss, global_step],feed_dict={x: reshaped_xs, y_:ys})
-            
-            
-            writer = tf.summary.FileWriter("/tmp/tflog", tf.get_default_graph())
-            
-            print(y)
+                       
+            #print(sess.run(y,feed_dict={x: reshaped_xs, y_:ys}))
             print('After %d training step(s), loss on training batch is %g.' % (step, loss_value))
-        
-    writer.close()   
+#     writer = tf.summary.FileWriter("/tmp/tflog", tf.get_default_graph())       
+#     writer.close()   
         
 def main(argv=None):
-    mnist = input_data.read_data_sets('data', one_hot=True)
-    train(mnist)
+    train()
 
     
 if __name__ == '__main__':

@@ -1,12 +1,12 @@
 # 加载数据分析常用库
 import pandas as pd
-import numpy as np
+# import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, LSTM, Dropout
 import matplotlib.pyplot as plt
-import glob, os
-import seaborn as sns
-import sys
+# import glob, os
+# import seaborn as sns
+# import sys
 from sklearn.preprocessing import MinMaxScaler
 
 #查看其中一个地区的训练数据
@@ -67,9 +67,19 @@ model.compile(loss='mean_squared_error', optimizer='adam')  #loss='mae'
 model.summary()
 
 # fit network
-history = model.fit(train_X, train_y, epochs=100, batch_size=32, validation_data=(valid_X, valid_y), verbose=2, shuffle=False)
+history = model.fit(train_X, train_y, epochs=2000, batch_size=32, validation_data=(valid_X, valid_y), verbose=2, shuffle=False)
+
+
+# 使用训练好的模型对测试集进行预测
+predicted = [pred for pred in model.predict(test_X)]
 # plot history
-plt.plot(history.history['loss'], label='train')
-plt.plot(history.history['val_loss'], label='valid')
-plt.legend()
+# plt.plot(history.history['loss'], label='train')
+# plt.plot(history.history['val_loss'], label='valid')
+# plt.legend()
+# plt.show()
+# 对预测曲线绘图，并存储到sin.jpg
+fig = plt.figure()
+plot_predicted, = plt.plot(predicted, label='predicted')
+plot_test, = plt.plot(test_y, label='real_sin')
+plt.legend([plot_predicted, plot_test], ['predicted', 'real_sin'])
 plt.show()

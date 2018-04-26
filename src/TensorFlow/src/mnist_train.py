@@ -73,8 +73,8 @@ def train(mnist):
             
             writer = tf.summary.FileWriter("/tmp/tflog", tf.get_default_graph())
             
-            print(y)    
-            #print(sess.run(y)) 
+            print(ys)    
+            #print(sess.run(tf.argmax(y_, 1),feed_dict={x: reshaped_xs, y_:ys})) 
     
             #if i % 1000 == 0:
             print('After %d training step(s), loss on training batch is %g.' % (step, loss_value))

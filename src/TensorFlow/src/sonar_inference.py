@@ -21,7 +21,7 @@ def inference(input_tensor, train, regularizer):
         
         fc1 = tf.nn.relu(tf.matmul(input_tensor, fc1_weights) + fc1_biases)
         if train:
-            fc1 = tf.nn.dropout(fc1, 0.5)
+            fc1 = tf.nn.dropout(fc1, 0.05)
             
     with tf.variable_scope('layer2_fc2'):
         fc2_weights = tf.get_variable(
@@ -36,7 +36,7 @@ def inference(input_tensor, train, regularizer):
         
         fc2 = tf.nn.relu(tf.matmul(fc1, fc2_weights) + fc2_biases)
         if train:
-            fc2 = tf.nn.dropout(fc2, 0.5)
+            fc2 = tf.nn.dropout(fc2, 0.05)
          
     with tf.variable_scope('layer3_fc3'):
         fc3_weights = tf.get_variable(
@@ -51,7 +51,7 @@ def inference(input_tensor, train, regularizer):
         
         fc3 = tf.nn.relu(tf.matmul(fc2, fc3_weights) + fc3_biases)
         if train:
-            fc3 = tf.nn.dropout(fc3, 0.5)                        
+            fc3 = tf.nn.dropout(fc3, 0.05)                        
 
           
     with tf.variable_scope('layer4_fc4'):

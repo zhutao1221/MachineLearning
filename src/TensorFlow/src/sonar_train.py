@@ -7,8 +7,8 @@ import csv
 
 LEARNING_RATE_BASE = 0.8
 LEARNING_RATE_DECAY = 0.99
-REGULARAZTION_RATE = 0.00001
-TRAINING_STEPS = 10000
+REGULARAZTION_RATE = 0.001
+TRAINING_STEPS = 20000
 MOVING_AVERAGE_DECAY = 0.99
 
 MODEL_SAVE_PATH = 'model'
@@ -77,39 +77,16 @@ def train(xTrain,yTrain):
             _, loss_value, step = sess.run([train_op, loss, global_step],feed_dict={x: xTrain, y_:yTrain})
             print('After %d training step(s), loss on training batch is %g.' % (step, loss_value))
         saver.save(sess, 'model/model.ckpt')
-        print(sess.run(y_,feed_dict={x: xTrain, y_:yTrain})) 
-        #outTemp = sess.run(y,{x:xTest,y_:yTest})    
+        #print(sess.run(y_,feed_dict={x: xTrain, y_:yTrain})) 
     writer = tf.summary.FileWriter("/tmp/tflog", tf.get_default_graph())        
-    writer.close()
-    #return outTemp    
+    writer.close()   
         
 def main(argv=None):
     allX,allY = createData()
     train_x = allX[0:160]
-    train_y = allY[0:160]
-    train(train_x,train_y)    
-#     test_x = allX[160:]
-#     test_y = allY[160:]
-#     out = train(train_x,train_y)
-#     print(out)
-           
+    train_y = allY[0:160]    
+    out = train(train_x,train_y)        
     
-    
-#     i=0
-#     count=0
-#     tempxx=0
-#     for i in range(test_y.shape[0]):
-#         if out[i][0] > out[i][1]:
-#             tempxx=0
-#         else:  
-#             tempxx=1   
-#         if train_y[i] == tempxx:
-#             count = count + 1
-#         i = i + 1
-#     
-#     print(count) 
-#     print(test_y.shape[0])
-
-    
+ 
 if __name__ == '__main__':
     tf.app.run()

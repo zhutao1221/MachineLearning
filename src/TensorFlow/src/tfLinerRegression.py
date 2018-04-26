@@ -7,7 +7,7 @@ def createData():
     return train_x,train_y  
   
   
-def linerRegression(train_x,train_y,epoch=800000,rate = 0.000001):  
+def linerRegression(train_x,train_y,epoch=900000,rate = 0.00001):
     
     with tf.variable_scope('input'): 
         n = train_x.shape[0]  
@@ -51,7 +51,8 @@ def linerRegression(train_x,train_y,epoch=800000,rate = 0.000001):
     
     with tf.Session() as sess:
         tf.global_variables_initializer().run()     
-        for index in range(epoch):   
+        for index in range(epoch):
+            print(index)     
             sess.run(optimizer,{x:train_x,y:train_y})
         
         

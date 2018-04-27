@@ -1,6 +1,6 @@
 import os
 import tensorflow as tf
-import mnist_inference
+import loans_inference
 from tensorflow.contrib.nn.python.ops import cross_entropy
 import numpy as np
 import csv
@@ -20,7 +20,7 @@ def createData():
     names = []
     firstLine = True
 
-    with open('loansTemp.csv','r') as f:
+    with open('loans/loansTemp.csv','r') as f:
         reader = csv.reader(f)
         for row in reader:
             if (firstLine):
@@ -46,7 +46,7 @@ def train(xTrain,yTrain):
     regularizer = tf.contrib.layers.l2_regularizer(REGULARAZTION_RATE)
     
     #with tf.name_scope('output'):    
-    y = mnist_inference.inference(x, 0, regularizer)
+    y = loans_inference.inference(x, 0, regularizer)
         
     global_step = tf.Variable(0, trainable=False)
     

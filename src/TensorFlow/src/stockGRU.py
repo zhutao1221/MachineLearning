@@ -7,8 +7,8 @@ from keras.layers import Dense,GRU
 from keras.optimizers import Adam
 import stockData
 
-train_X,train_y = stockData.generate_data(0,300)
-test_X,test_y = stockData.generate_data(0,300)
+train_X,train_y = stockData.generate_data(0,240)
+test_X,test_y = stockData.generate_data(0,245)
 
 adam = Adam(lr=0.001)
 model = Sequential()
@@ -19,13 +19,13 @@ model.add(Dense(1,activation='linear'))
 model.compile(loss='mean_squared_error', optimizer=adam)
 model.summary()
 
-model.fit(train_X, train_y, epochs=1000, batch_size=100, verbose=1, shuffle=False)
+model.fit(train_X, train_y, epochs=30000, batch_size=100, verbose=1, shuffle=False)
 model.save('stockGRU5.h5')
 
 predicted = model.predict(test_X)
 predicted = predicted.flatten()
-# predicted = predicted/10
-# test_y = test_y/10
+predicted = predicted/10
+test_y = test_y/10
 
 rmse = np.sqrt(((predicted - test_y)**2).mean(axis=0))
 print('Mean SD Error is: %f' % rmse)

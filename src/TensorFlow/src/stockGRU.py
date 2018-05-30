@@ -7,8 +7,8 @@ from keras.layers import Dense,GRU
 from keras.optimizers import Adam
 import stockData
 
-train_X,train_y = stockData.generate_data(0,240)
-test_X,test_y = stockData.generate_data(0,245)
+train_X,train_y = stockData.generate_data5(0,269)
+test_X,test_y = stockData.generate_data5(260,269)
 
 adam = Adam(lr=0.001)
 model = Sequential()

@@ -26,11 +26,13 @@ def findType(tags):
         for tag in tags:
             if tag in keyword_dic_list:
                 key_types.append(type_dic)
+                break
     return key_types
     
     
 #main
 for dirpath,dirnames,filenames in os.walk('news'):
+    hashlist = []
     for file in filenames:
         fullpath=os.path.join(dirpath,file)
 
@@ -38,9 +40,12 @@ for dirpath,dirnames,filenames in os.walk('news'):
             reader = csv.reader(f)
             for row in reader:
                 if row[4] !='': 
-                    filename = os.path.basename(fullpath)
-                    targetFile = 'temp/notnull/' + filename
-                    copyFiles(fullpath,targetFile)
+                    file_hash = hash(row[4])
+                    if file_hash not in hashlist:
+                        hashlist.append(file_hash)
+                        filename = os.path.basename(fullpath)
+                        targetFile = 'temp/notnull/' + filename
+                        copyFiles(fullpath,targetFile)
             
 for dirpath,dirnames,filenames in os.walk('temp/notnull'):
     for file in filenames:
@@ -62,5 +67,4 @@ for dirpath,dirnames,filenames in os.walk('temp/notnull'):
                     filename = os.path.basename(fullpath)
                     for index in type_all: 
                         targetFile = 'temp/' + index + '/' + filename
-                        copyFiles(fullpath,targetFile)
-            
+                        copyFiles(fullpath,targetFile)       
